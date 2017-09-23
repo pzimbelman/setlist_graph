@@ -9,4 +9,8 @@ Types::QueryType = GraphQL::ObjectType.define do
       Band.where(args.to_h.symbolize_keys).first
     }
   end
+
+  field :venue, types.String do
+    type Types::VenueType
+  end
 end
