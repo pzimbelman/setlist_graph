@@ -155,3 +155,18 @@ test:
         read:
           mode: :primary
         max_pool_size: 1
+qa:
+  clients:
+    default:
+      database: setlists_qa
+      hosts:
+        - setlists-qa-shard-00-00-dg9dl.mongodb.net:27017
+        - setlists-qa-shard-00-01-dg9dl.mongodb.net:27017
+        - setlists-qa-shard-00-02-dg9dl.mongodb.net:27017
+      options:
+        # The name of the user for authentication.
+        user: <%= ENV['SETLISTS_DB_USER'] %>
+        password: <%= ENV['SETLISTS_DB_PASSWORD'] %>
+        auth_source: admin
+        # All Atlas servers use SSL. (default: false)
+        ssl: true
