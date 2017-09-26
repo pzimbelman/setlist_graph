@@ -12,5 +12,6 @@ describe Types::PerformanceType do
     expect(performance_fields).to include('fourth_set')
     expect(performance_fields).to include('encore')
     expect(performance_fields).to include('double_encore')
+    expect(performance_fields).to include('venue')
   end
 end

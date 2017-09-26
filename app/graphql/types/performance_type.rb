@@ -8,4 +8,5 @@ Types::PerformanceType = GraphQL::ObjectType.define do
   field :fourth_set, types[types.String]
   field :encore, types[types.String]
   field :double_encore, types[types.String]
+  field :venue, !Types::VenueType
 end
