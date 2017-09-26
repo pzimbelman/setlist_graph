@@ -1,0 +1,4 @@
+curl -XPOST -d 'query={ band(slug: "phish") { 
+                               name
+                               slug
+                           }}' http://setlist-graph-qa.herokuapp.com/graph
