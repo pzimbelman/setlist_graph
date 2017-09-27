@@ -25,4 +25,11 @@ describe GraphqlController do
     expect(json_response['data']['performance']['date']).to eq('2017-12-20')
     expect(json_response['data']['performance']['first_set']).to eq(['The Lizards'])
   end
+
+  it 'will handle not finding the requested band' do
+    post :execute, params: { query: "{ performance(band: \"fakeband\", date: \"#{performance.date}\") { date first_set } }" }
+    json_response = JSON.parse(response.body)
+    expect(response.status).to eq(200)
+    expect(json_response['errors'].first['message']).to eq('Band could not be found')
+  end
 end
