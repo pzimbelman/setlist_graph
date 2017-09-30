@@ -3,7 +3,7 @@ require 'rails_helper'
 describe GraphqlController do
   let!(:band) { Band.create!(name: 'Phish', slug: 'phish') }
   let(:venue) { Venue.create!(city: 'New York', state: 'NY', name: 'MSG') }
-  let(:performance) do
+  let!(:performance) do
     Performance.create!(date: Date.parse('2017-12-20'),
       band: band,
       venue: venue,
@@ -16,6 +16,23 @@ describe GraphqlController do
     json_response = JSON.parse(response.body)
     expect(response.status).to eq(200)
     expect(json_response['data']['band']['name']).to eq('Phish')
+  end
+
+  it 'will allow retrieval of a bands most recent performances' do
+    post :execute, params: { query: "{ band(slug: \"phish\") { performances { first_set }} }" }
+    json_response = JSON.parse(response.body)
+    expect(response.status).to eq(200)
+    performances = json_response['data']['band']['performances']
+    expect(performances.count).to eq(1)
+    expect(performances.first['first_set']).to eq(['The Lizards'])
+  end
+
+  it 'will allow specifying a limit on the performances' do
+    Performance.create!(date: Date.parse('2017-12-21'),
+      band: band, venue: venue, first_set: ['The Lizards'])
+    post :execute, params: { query: "{ band(slug: \"phish\") { performances(limit: 1) { date }}}" }
+    json_response = JSON.parse(response.body)
+    expect(json_response['data']['band']['performances'].count).to eq(1)
   end
 
   it 'will allow looking up a performance by band and date' do
