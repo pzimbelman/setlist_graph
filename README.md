@@ -1,24 +1,39 @@
-# README
+## Concert Setlist GraphQL API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is an experiment with GraphQL. I have a database of concert setlists that I've pulled together and I decided to try and build a simple GraphQL API on top of the database. More details will come as I continue to build on it but for now, it supports a couple of basic queries as described below:
 
-Things you may want to cover:
 
-* Ruby version
+**Get the last 20 shows performed by a band:**
+```
+query={ band(slug: "phish") {
+     name
+     slug
+     performances(limit: 20) {
+       date
+       first_set
+       second_set
+       encore
+       venue {
+         name
+         city
+         state
+       }
+     }
+ }}
+```
 
-* System dependencies
+**Get a single performance for a band on a particular date:**
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+query={ performance(band: "phish", date: "2009-12-02") {
+     date
+     first_set
+     second_set
+     encore
+     venue {
+       name
+       city
+       state
+     }
+ }}
+```
