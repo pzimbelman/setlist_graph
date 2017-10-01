@@ -9,10 +9,6 @@ Types::QueryType = GraphQL::ObjectType.define do
     }
   end
 
-  field :venue, types.String do
-    type Types::VenueType
-  end
-
   field :performance, types.String do
     type Types::PerformanceType
     argument :date, types.String
