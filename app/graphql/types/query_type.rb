@@ -14,10 +14,11 @@ Types::QueryType = GraphQL::ObjectType.define do
     argument :date, types.String
     argument :band, !types.String
     resolve ->(obj, args, ctx) {
-      if band = Band.where(slug: args['band']).first
-        Performance.where(band_id: band.id, date: args['date']).first
-      else
-        GraphQL::ExecutionError.new("Band could not be found")
+      begin
+        search = PerformanceSearch.new(band: args['band'], date: args['date'])
+        search.results.first
+      rescue PerformanceSearch::SearchError => e
+        GraphQL::ExecutionError.new(e.message)
       end
     }
   end

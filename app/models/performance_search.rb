@@ -14,9 +14,9 @@ class PerformanceSearch
 
   private
   def find_band_criteria
-    return unless @args[:band_id]
-    band = Band.where(id: @args[:band_id]).first
-    raise SearchError.new("Invalid band ID specified") unless band
+    return unless @args[:band]
+    band = Band.where(slug: @args[:band]).first
+    raise SearchError.new("Band could not be found") unless band
     band
   end
 end

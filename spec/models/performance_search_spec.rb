@@ -30,7 +30,7 @@ describe PerformanceSearch do
       band: other_band, venue: venue, first_set: ['The Lizards'])
     performance = Performance.create!(date: Date.parse('2017-12-20'),
       band: band, venue: venue, first_set: ['The Lizards'])
-    search = PerformanceSearch.new(band_id: band.id)
+    search = PerformanceSearch.new(band: band.slug)
 
     expect(search.results.count).to eq(1)
     expect(search.results.first).to eq(performance)
@@ -38,7 +38,7 @@ describe PerformanceSearch do
 
   it 'will raise a search error if the band ID is invalid' do
     expect {
-      PerformanceSearch.new(band_id: "aninvalidID").results
+      PerformanceSearch.new(band: "aninvalidID").results
     }.to raise_error(PerformanceSearch::SearchError)
   end
 
