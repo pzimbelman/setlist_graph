@@ -49,4 +49,34 @@ describe GraphqlController do
     expect(response.status).to eq(200)
     expect(json_response['errors'].first['message']).to eq('Band could not be found')
   end
+
+  it 'will allow retrieving a list of performances' do
+    Performance.create!(date: Date.parse('2017-12-20'),
+      band: band, venue: venue, first_set: ['The Lizards'])
+    post :execute, params: { query: "{ performances { date first_set } }" }
+
+    json_response = JSON.parse(response.body)
+    expect(json_response['data']['performances'].count).to eq(2)
+    expect(json_response['data']['performances'].first['date']).to eq('2017-12-20')
+  end
+
+  it 'will allow retrieving a list of performances for a particular band' do
+    Performance.create!(date: Date.parse('2019-12-20'),
+      band: Band.create!(name: "foo", slug: "foo"), venue: venue, first_set: ['The Lizards'])
+    post :execute, params: { query: "{ performances(band: \"phish\") { date first_set } }" }
+
+    json_response = JSON.parse(response.body)
+    expect(json_response['data']['performances'].count).to eq(1)
+    expect(json_response['data']['performances'].first['date']).to eq('2017-12-20')
+  end
+
+  it 'will allow specifying an offset so that clients can page through results' do
+    Performance.create!(date: Date.parse('2019-12-20'),
+      band: band, venue: venue, first_set: ['The Lizards'])
+    post :execute, params: { query: "{ performances(offset: 1) { date first_set } }" }
+
+    json_response = JSON.parse(response.body)
+    expect(json_response['data']['performances'].count).to eq(1)
+    expect(json_response['data']['performances'].first['date']).to eq('2017-12-20')
+  end
 end
